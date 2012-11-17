@@ -5,6 +5,7 @@
 // @include http://*
 // @include https://*
 // @exclude http://twicli.neocat.jp/twicli.html
+// @resource css https://raw.github.com/azu/PBNT/master/style.css
 // @require https://raw.github.com/azu/usconfig/v1.2.1/usconfig.js
 // @resource usconfigcss https://raw.github.com/azu/usconfig/v1.2.1/usconfig.css.template
 // @require https://raw.github.com/azu/OAuth-for-Greasemonkey/master/oauth.js
@@ -243,6 +244,7 @@
                                             checkbox("Use selection quote", 'isSelection', true), '\n',
                                             checkbox("remove utm_* parameter", 'removeUtm', false), '\n',
                                             checkbox("avoid link to @ and #", 'avoidLinktoMeta', false), '\n',
+                                            checkbox("avoid link to string like 'example.com'", 'avoidLinkDomainString', false), '\n',
                                             checkbox("Post with Ctrl+Enter", 'PostWithCtrl', false), '\n',
                                             text("ShortcutKey:", 'ShortCutKey', "CS-Enter", { size : 16 })
                                     )
@@ -897,6 +899,10 @@
     }
 
     function preventAutoLink(str){
+        // 設定によってはそのまま返す
+        if(!GM_settings.avoidLinkDomainString){
+            return str;
+        }
         var MAGIC_NUMBER = "0xe38286e381ae";
         var URLReg = /(https?:\/\/[^:/<>&\s]+(?::\d+)?(?:\/[^#\s<>&()"']*(?:#(?:[^\s<>&"'()]+))?)?)|(.)/ig;
         var domainReg = /(?:[a-z][a-z0-9-]*[a-z0-9](\.))+(?:jp|aero|biz|com|coop|info|museum|name|net|org|pro|jobs|travel|arpa|edu|gov|int|mil|nato)/ig;
