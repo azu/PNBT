@@ -1,0 +1,62 @@
+#GM_Now_Box {
+    line-height: 20px;
+    z-index: 7890;
+    position: fixed;
+    display: none;
+    overflow: auto;
+    width: 95%;
+    background-color: #333;
+    color: #fff;
+    padding: 4px 6px;
+}
+
+#GM_Now_InputField {
+    outline: none;
+    width: 90%;
+    margin: 0;
+    padding: 0;
+    margin: 3px 0;
+    border: none;
+    font-size: 32px;
+    background: none;
+    color: #fff;
+    /* ime-mode:active; */
+}
+
+#GM_Now_Sub {
+
+}
+
+.GM_edit_guard {
+    width: auto;
+    float: left;
+}
+
+#GM_Now_SubURL, #GM_Now_SubActivity {
+    background: none;
+    color: #fff;
+    font-size: 15px;
+    width: auto;
+    margin-top: 3px;
+    font-weight: bold;
+}
+
+#GM_Now_SubURL {
+    display: inline;
+    float: right;
+}
+
+#GM_Now_SubCounter {
+    background: none;
+    color: #fff;
+    margin-left: 5px;
+    padding-bottom: -5px;
+    display: inline;
+    float: right;
+}
+
+#GM_Now_SubActivity {
+    height: 10px;
+    display: inline;
+    padding-left: 5px;
+}

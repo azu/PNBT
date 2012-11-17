@@ -67,13 +67,11 @@
         // buttons_holder
         var section = iframeDoc.createElement("div");
         section.className = "section_header_holder";
-        section.setAttribute("style", <>
-            <![CDATA[
-            font-size: 95%;
-            line-height: 120%;
-            margin-left: 20%;
-            margin-right: 20%;
-       ]]></>.toString());
+        section.setAttribute("style", "font-size: 95%;" +
+                "line-height: 120%;" +
+                "margin-left: 20%;" +
+                "margin-right: 20%;"
+        );
 
         var configDiv1;
         if (TWOauth.isAuthorize()){// OAuth認証済みな時
@@ -99,12 +97,16 @@
             iframeDoc.createElement("div");
             configDiv1.className = "config_var";
             var explaintext = iframeDoc.createElement("p");
-            explaintext.innerHTML = <ol>
-                <li>Click "Sign in with Twitter" button</li>
-                <li>Allow {clientInfo.name} access</li>
-                <li>Copy PIN code</li>
-                <li>Input PIN code and Confirm</li>
-            </ol>.toString();
+            explaintext.innerHTML = ['',
+                '<ol>',
+                '    <li>Click "Sign in with Twitter" button</li>',
+                '    <li>Allow ' + clientInfo.name + ' access</li>',
+                '    <li>Copy PIN code</li>',
+                '    <li>Input PIN code and Confirm</li>',
+                '</ol>'
+            ].join("\n");
+
+
             configDiv1.appendChild(explaintext);
             var imgOauth = iframeDoc.createElement("img");
             imgOauth.src = "data:image/png;base64,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";
@@ -581,81 +583,24 @@
             var counter = strLen(obj.url);
 
             // バグ - https://twitter.com/azu_re/statuses/16219838145
-            var E4Xhtml = <div style="display: block;" id="GM_Now_Box" class="GM_Now_ThemeDefault">
-                <input type="text" value="" id="GM_Now_InputField" class="GM_Now_ThemeDefault" />
-                <div id="GM_Now_Sub">
-                    <div class="edit_guard">
-                        <div contenteditable="false" id="GM_Now_SubActivity">{defVal.activity}</div>
-                    </div>
-                    <div id="GM_Now_SubCounter" style="font-size: 25px;">{counter}</div>
-                    <div id="GM_Now_SubURL">{defVal.url}</div>
-                </div>
-            </div>;
-            var dom = e4xToDOM(E4Xhtml);
-            return dom;
+            var E4Xhtml = ['',
+                '<div style="display: block;" id="GM_Now_Box" class="GM_Now_ThemeDefault">',
+                '    <input type="text" value="" id="GM_Now_InputField" class="GM_Now_ThemeDefault" />',
+                '    <div id="GM_Now_Sub">',
+                '        <div class="GM_edit_guard">',
+                '            <div contenteditable="false" id="GM_Now_SubActivity">' + defVal.activity + '</div>',
+                '        </div>',
+                '        <div id="GM_Now_SubCounter" style="font-size: 25px;">' + counter + '</div>',
+                '        <div id="GM_Now_SubURL">' + defVal.url + '</div>',
+                '    </div>',
+                '</div>',
+                ''].join("\n");
+            var htmlForPost = e4xToDOM(E4Xhtml);
+            return htmlForPost;
         },
         addCSS : function(doc){
             // based on gleebox
-            addCSS(doc, String(<>
-                <![CDATA[
-                #GM_Now_Box {
-                    line-height: 20px;
-                    z-index: 7890;
-                    position: fixed;
-                    display: none;
-                    overflow: auto;
-                    width: 95%;
-                    background-color: #333;
-                    color: #fff;
-                    padding: 4px 6px;
-                }
-                #GM_Now_InputField {
-                    outline: none;
-                    width: 90%;
-                    margin: 0;
-                    padding: 0;
-                    margin: 3px 0;
-                    border: none;
-                    font-size: 32px;
-                    background: none;
-                    color: #fff;
-                    /* ime-mode:active; */
-                }
-                #GM_Now_Sub{
-
-                }
-                .edit_guard{
-                    width: auto;
-                    float: left;
-                }
-                #GM_Now_SubURL, #GM_Now_SubActivity {
-                    background: none;
-                    color: #fff;
-                    font-size: 15px;
-                    width: auto;
-                    margin-top : 3px;
-                    font-weight: bold;
-                }
-
-                #GM_Now_SubURL {
-                    display: inline;
-                    float: right;
-                }
-                #GM_Now_SubCounter{
-                    background: none;
-                    color: #fff;
-                    margin-left : 5px;
-                    padding-bottom : -5px;
-                    display: inline;
-                    float: right;
-                }
-                #GM_Now_SubActivity {
-                    height: 10px;
-                    display: inline;
-                    padding-left: 5px;
-                }
-
-                ]]></>));
+            addCSS(doc, GM_getResourceText("css"));
         },
         arrangeMes : function(){
             if (this.comment == null){
@@ -708,7 +653,7 @@
 
     /*  CSSをcontextに加える
      how to use
-     addCSS(document ,<><![CDATA[
+     addCSS(document ,
      *{
      font-size:12px;
      background-color:#000;
@@ -789,19 +734,19 @@
             var txt = XPath.first(_doc, 'id("loading_message")');
             if (!txt){
                 var loading = _doc.createElement("p");
-                loading.setAttribute("style", <>
-                    <![CDATA[
-                    position:fixed;
-                    right:0;
-                    top:80%;
-                    color:#fff;
-                    background:#000;
-                ]]></>.toString());
+                loading.setAttribute("style", ['',
+                    'position:fixed;',
+                    'right:0;',
+                    'top:80%;',
+                    'color:#fff;',
+                    'background:#000;'
+                ].join("\n"));
                 loading.innerHTML = "Now Loading...";
                 loading.id = "loading_message";
                 _doc.body.appendChild(loading);
             }
         },
+
         removeText : function(_doc){
             var txt = XPath.first(_doc, 'id("loading_message")');
             if (txt){
@@ -822,8 +767,8 @@
     // E4X to DOM
     function e4xToDOM(html){
         var range = document.createRange();
-        var dom = range.createContextualFragment(html);
-        return dom;
+        var htmlDOM = range.createContextualFragment(html);
+        return htmlDOM;
     }
 
     // http://liosk.blog103.fc2.com/blog-entry-162.html
@@ -900,7 +845,7 @@
 
     function preventAutoLink(str){
         // 設定によってはそのまま返す
-        if(!GM_settings.avoidLinkDomainString){
+        if (!GM_settings.avoidLinkDomainString){
             return str;
         }
         var MAGIC_NUMBER = "0xe38286e381ae";
