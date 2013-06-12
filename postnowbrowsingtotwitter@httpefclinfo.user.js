@@ -68,9 +68,9 @@
         var section = iframeDoc.createElement("div");
         section.className = "section_header_holder";
         section.setAttribute("style", "font-size: 95%;" +
-                "line-height: 120%;" +
-                "margin-left: 20%;" +
-                "margin-right: 20%;");
+            "line-height: 120%;" +
+            "margin-left: 20%;" +
+            "margin-right: 20%;");
 
 
         if (TWOauth.isAuthorize()){// OAuth認証済みな時
@@ -225,72 +225,72 @@
     // ショートカットの定義
     var shortcut = new ShortcutKey();
     Config.define('usc_basic', function(){
-                with (this.builder){
-                    var shortURL_opt = [
-                        'bit.ly',
-                        'j.mp',
-                        'goo.gl',
-                        'is.gd',
-                        'tinyurl.com'
-                    ];
-                    dialog(
-                            "Post Now browsing to Twitter Settings",
-                            { width : 600, height : 700 },
+            with (this.builder){
+                var shortURL_opt = [
+                    'bit.ly',
+                    'j.mp',
+                    'goo.gl',
+                    'is.gd',
+                    'tinyurl.com'
+                ];
+                dialog(
+                    "Post Now browsing to Twitter Settings",
+                    { width : 600, height : 700 },
 
-                            section(
-                                    "User options",
-                                    "Behavior/keyboard Preference",
-                                    grid(
-                                            text("Prefix:", 'defaultTag', "Now browsing: ", { size : 20 }), '\n',
-                                            checkbox("Use selection quote", 'isSelection', true), '\n',
-                                            checkbox("remove utm_* parameter", 'removeUtm', false), '\n',
-                                            checkbox("avoid link to @ and #", 'avoidLinktoMeta', false), '\n',
-                                            checkbox("avoid link to string like 'example.com'", 'avoidLinkDomainString', false), '\n',
-                                            checkbox("Post with Ctrl+Enter", 'PostWithCtrl', false), '\n',
-                                            text("ShortcutKey:", 'ShortCutKey', "CS-Enter", { size : 16 })
-                                    )
-                            ),
-                            section(
-                                    "Short URL options",
-                                    "select used Short URL service",
+                    section(
+                        "User options",
+                        "Behavior/keyboard Preference",
+                        grid(
+                            text("Prefix:", 'defaultTag', "Now browsing: ", { size : 20 }), '\n',
+                            checkbox("Use selection quote", 'isSelection', true), '\n',
+                            checkbox("remove utm_* parameter", 'removeUtm', false), '\n',
+                            checkbox("avoid link to @ and #", 'avoidLinktoMeta', false), '\n',
+                            checkbox("avoid link to string like 'example.com'", 'avoidLinkDomainString', false), '\n',
+                            checkbox("Post with Ctrl+Enter", 'PostWithCtrl', false), '\n',
+                            text("ShortcutKey:", 'ShortCutKey', "CS-Enter", { size : 16 })
+                        )
+                    ),
+                    section(
+                        "Short URL options",
+                        "select used Short URL service",
 
-                                    grid(
-                                            select("Short URL Services", 'ShortURL', shortURL_opt, "bit.ly"), '\n',
-                                            text("bit.ly Username:", 'bitlyUserName', "remiko"), '\n',
-                                            text("bit.ly APIKey :", 'bitlyAPIKey', 'R_fa2240c646c07b2091c6bc6d109089ef', { size : 30 }),
-                                            '\n',
-                                            text("goo.gl APIKey :", 'googlAPIKey', '', { size : 30 })
-                                    )
-                            ),
-                            section(
-                                    "OAuth Authorization",
-                                    "Sign in with Twitter"
-                            )
-                    );
-                }
+                        grid(
+                            select("Short URL Services", 'ShortURL', shortURL_opt, "bit.ly"), '\n',
+                            text("bit.ly Username:", 'bitlyUserName', "remiko"), '\n',
+                            text("bit.ly APIKey :", 'bitlyAPIKey', 'R_fa2240c646c07b2091c6bc6d109089ef', { size : 30 }),
+                            '\n',
+                            text("goo.gl APIKey :", 'googlAPIKey', '', { size : 30 })
+                        )
+                    ),
+                    section(
+                        "OAuth Authorization",
+                        "Sign in with Twitter"
+                    )
+                );
+            }
+        },
+        // options
+        {
+            saveKey : 'GM_config',
+            aftersave : function(){
+
             },
-            // options
-            {
-                saveKey : 'GM_config',
-                aftersave : function(){
-
-                },
-                afteropen : function(){
-                    // ショートカットの入力補助
-                    var iframeDoc = this.frame.contentDocument;
-                    iframeDoc.getElementById("control_ShortCutKey").addEventListener('keydown', function(evt){
-                        evt.preventDefault();
-                        this.value = shortcut.get(evt);
-                    }, false);
-                    // OAuth Setting
-                    if (TWOauth.isAuthorize()){
-                        TWOauth.injectToConfig();
-                    }else{
-                        XHRloading.createText(iframeDoc);
-                        TWOauth.getRequestToken(TWOauth.injectToConfig);
-                    }
+            afteropen : function(){
+                // ショートカットの入力補助
+                var iframeDoc = this.frame.contentDocument;
+                iframeDoc.getElementById("control_ShortCutKey").addEventListener('keydown', function(evt){
+                    evt.preventDefault();
+                    this.value = shortcut.get(evt);
+                }, false);
+                // OAuth Setting
+                if (TWOauth.isAuthorize()){
+                    TWOauth.injectToConfig();
+                }else{
+                    XHRloading.createText(iframeDoc);
+                    TWOauth.getRequestToken(TWOauth.injectToConfig);
                 }
-            });
+            }
+        });
     GM_registerMenuCommand('Post Now browsing to Twitter Setting', function(){
         // https://twitter.com/azu_re/statuses/70426009136144384
         Config.open();
@@ -317,7 +317,7 @@
         'goo.gl' : {
             method : "POST",
             action : "https://www.googleapis.com/urlshortener/v1/url"
-                    + ((GM_settings.googlAPIKey !== "") ? "?key=" + GM_settings.googlAPIKey : ""),
+                + ((GM_settings.googlAPIKey !== "") ? "?key=" + GM_settings.googlAPIKey : ""),
             headers : {
                 "Content-Type" : "application/json"
             },
@@ -330,12 +330,12 @@
         'bit.ly' : {
             method : "GET",
             action : "http://api.bit.ly/v3/shorten?&format=txt&login="
-                    + GM_settings.bitlyUserName + "&apiKey=" + GM_settings.bitlyAPIKey + "&longUrl="
+                + GM_settings.bitlyUserName + "&apiKey=" + GM_settings.bitlyAPIKey + "&longUrl="
         },
         'j.mp' : {
             method : "GET",
             action : "http://api.j.mp/v3/shorten?&format=txt&login="
-                    + GM_settings.bitlyUserName + "&apiKey=" + GM_settings.bitlyAPIKey + "&longUrl="
+                + GM_settings.bitlyUserName + "&apiKey=" + GM_settings.bitlyAPIKey + "&longUrl="
         },
         'is.gd' : {
             method : "GET",
@@ -489,8 +489,7 @@
                     t = [' "', this.title, '" '].join('');
                 }
             }
-            this.activity = t;
-
+            this.activity = escapeHTML(t);
             // 渡すオブジェクト
             var defObj = {
                 activity : this.activity,
@@ -635,7 +634,7 @@
         },
         post : function(){
             var content = {status : this.post_message, source : clientInfo.name};
-            TWOauth.post('https://api.twitter.com/1/statuses/update.json', content, function(evt){
+            TWOauth.post('https://api.twitter.com/1.1/statuses/update.json', content, function(evt){
 
             });
         }
@@ -842,6 +841,13 @@
         return str;
     }
 
+    function escapeHTML(str) {
+        return str.replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
     function preventAutoLink(str){
         // 設定によってはそのまま返す
         if (!GM_settings.avoidLinkDomainString){
@@ -861,14 +867,14 @@
             return m;
             // ドメイン文字列を自動リンクされないように回避
         }).replace(domainReg,function(m, domain){
-                    if (domain){
-                        m = m.replace(".", "-", "g");
-                    }
-                    return m;
-                    // 保護したURLを戻す
-                }).replace(MAGIC_NUMBER, function(m){
-                    return urlStack.shift();
-                }, "g");
+                if (domain){
+                    m = m.replace(".", "-", "g");
+                }
+                return m;
+                // 保護したURLを戻す
+            }).replace(MAGIC_NUMBER, function(m){
+                return urlStack.shift();
+            }, "g");
         return result;
     }
 })();
