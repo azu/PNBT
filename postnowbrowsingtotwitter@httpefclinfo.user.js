@@ -5,7 +5,7 @@
 // @include http://*
 // @include https://*
 // @exclude http://twicli.neocat.jp/twicli.html
-// @resource css https://raw.github.com/azu/PBNT/master/style.css
+// @resource css https://raw.github.com/azu/PNBT/master/style.css
 // @require https://raw.github.com/azu/usconfig/v1.2.1/usconfig.js
 // @resource usconfigcss https://raw.github.com/azu/usconfig/v1.2.1/usconfig.css.template
 // @require https://raw.github.com/azu/OAuth-for-Greasemonkey/master/oauth.js
