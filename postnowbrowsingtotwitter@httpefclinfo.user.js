@@ -778,15 +778,7 @@
 
     // http://liosk.blog103.fc2.com/blog-entry-162.html
     function strLen(str) {
-        var i = 0, len = str.length, result = 0;
-        while (i < len) {
-            result++;
-            var x = str.charCodeAt(i++);
-            if (0xD800 <= x && x < 0xDC00) {
-                i++;
-            }
-        }
-        return result;
+        return twttr.txt.getTweetLength(str);
     }
 
     // debug関数
