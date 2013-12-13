@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name Post Now browsing to Twitter
 // @namespace http://efcl.info/
-// @version 1.2
+// @version 1.2.1
 // @description Usage: Ctrl + Shift + Enter -> "Now browsing: ****" on Twitter.
 // @include http://*
 // @include https://*
@@ -636,7 +636,7 @@
         },
         post: function () {
             var content = {status: this.post_message, source: clientInfo.name};
-            TWOauth.post('https://api.twitter.com/1.1/statuses/update.json', content, function (error, evt) {
+            TWOauth.postPath('https://api.twitter.com/1.1/statuses/update.json', content, function (error, evt) {
                 if (error) {
                     console.log("PNBT post Error : ", error);
 
