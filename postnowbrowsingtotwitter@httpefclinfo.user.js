@@ -636,7 +636,7 @@
         },
         post: function () {
             var content = {status: this.post_message, source: clientInfo.name};
-            TWOauth.postPath('https://api.twitter.com/1.1/statuses/update.json', content, function (error, evt) {
+            TWOauth.postURL('https://api.twitter.com/1.1/statuses/update.json', content, function (error, evt) {
                 if (error) {
                     console.log("PNBT post Error : ", error);
 
