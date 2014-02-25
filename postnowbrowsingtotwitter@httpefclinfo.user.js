@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name Post Now browsing to Twitter
 // @namespace http://efcl.info/
-// @version 1.2.1
+// @version 1.2.2
 // @description Usage: Ctrl + Shift + Enter -> "Now browsing: ****" on Twitter.
 // @include http://*
 // @include https://*
@@ -230,6 +230,7 @@
     Config.define('usc_basic', function () {
             with (this.builder) {
                 var shortURL_opt = [
+                    't.co',
                     'bit.ly',
                     'j.mp',
                     'goo.gl',
@@ -502,9 +503,9 @@
             makeFrame(function gotFrame1(iframe, win, doc) {
                 self.doc = doc;
                 self.iframe = iframe;
-                iframe.width = "100%";
                 iframe.style.width = "100%";
                 iframe.style.position = "fixed";
+                iframe.style.display = "block";
                 var inputUI = self.createHTML(defObj);
                 self.addCSS(doc);
                 // 入力領域を表示
@@ -676,7 +677,7 @@
     }
 
     // フレームパネルの作成
-    function makeFrame(callback/*(iframeTag, window, document)*/, name) {
+    function makeFrame(callback, name) {
         function testInvasion() {
             iframe.removeEventListener("load", done, true);
             var message = ((new Date) - load.start) + "ms passed, ";
@@ -702,7 +703,7 @@
 
         var framename = iframe.name =
             typeof name !== "undefined" ? name : ("pane" + (makeFrame.id = (makeFrame.id || 0) - 1));
-        iframe.setAttribute("style", "overflow:auto;z-index:7890; border:0; margin:0; padding:0;top:82%; bottom:0; left:0;");
+        iframe.setAttribute("style", "overflow:auto;z-index:27890; border:0; margin:0; padding:0;top:82%; bottom:0; left:0;");
         iframe.src = "about:blank";
         iframe.addEventListener("load", done, true);
         var frames = makeFrame.data || {};
@@ -821,11 +822,17 @@
         if (GM_settings.avoidLinktoMeta) {
             title = removeMeta(title);
         }
-        var receivedShortUrl = new MakeShortURL(normalURL);// 初期化
-        receivedShortUrl.getShortURL(function (shortedURL) {
-            var twitterNew = new PostTwitter(shortedURL, title)
+        // 短縮URLサービスは使わない
+        if(siteAPI === 't.co'){
+            var twitterNew = new PostTwitter(normalURL, title);
             twitterNew.make_message();
-        });
+        }else{
+            var receivedShortUrl = new MakeShortURL(normalURL);
+            receivedShortUrl.getShortURL(function (shortedURL) {
+                var twitterNew = new PostTwitter(shortedURL, title);
+                twitterNew.make_message();
+            });
+        }
     }
 
     // ユーザー名やハッシュタグのリンクをさせないようにゼロ幅文字を挟む
