@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name Post Now browsing to Twitter
 // @namespace http://efcl.info/
-// @version 1.2.2
+// @version 1.2.3
 // @description Usage: Ctrl + Shift + Enter -> "Now browsing: ****" on Twitter.
 // @include http://*
 // @include https://*
@@ -703,7 +703,7 @@
 
         var framename = iframe.name =
             typeof name !== "undefined" ? name : ("pane" + (makeFrame.id = (makeFrame.id || 0) - 1));
-        iframe.setAttribute("style", "overflow:auto;z-index:27890; border:0; margin:0; padding:0;top:82%; bottom:0; left:0;");
+        iframe.setAttribute("style", "overflow:auto;z-index:2147483647; border:0; margin:0; padding:0;top:82%; bottom:0; left:0;");
         iframe.src = "about:blank";
         iframe.addEventListener("load", done, true);
         var frames = makeFrame.data || {};
@@ -724,7 +724,7 @@
             var btnDiv = XPath.first(document, 'id("GM_Now_browsing")');
             if (!btnDiv) {
                 var btn = document.createElement('div');
-                btn.setAttribute("style", 'background: rgb(255, 0, 0) none repeat scroll 0% 0%; font-size: 12px; position: fixed;overflow:auto; bottom: 3px; right: 3px; -moz-background-clip: border; -moz-background-origin: padding; -moz-background-inline-policy: continuous; color: rgb(255, 255, 255); width: 20px; height: 20px; z-index: 255;');
+                btn.setAttribute("style", 'background: rgb(255, 0, 0) none repeat scroll 0% 0%; font-size: 12px; position: fixed;overflow:auto; bottom: 3px; right: 3px; -moz-background-clip: border; -moz-background-origin: padding; -moz-background-inline-policy: continuous; color: rgb(255, 255, 255); width: 20px; height: 20px; z-index: 2147483647;');
                 btn.id = "GM_Now_browsing";
                 document.body.appendChild(btn);
             }
