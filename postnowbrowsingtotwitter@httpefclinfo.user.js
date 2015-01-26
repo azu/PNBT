@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name Post Now browsing to Twitter
 // @namespace http://efcl.info/
-// @version 1.2.3
+// @version 1.2.4
 // @description Usage: Ctrl + Shift + Enter -> "Now browsing: ****" on Twitter.
 // @include http://*
 // @include https://*
@@ -15,10 +15,21 @@
 // @require https://raw.github.com/azu/PNBT/master/twitter-text-tweetlength.js
 // @run-at  document-end
 // @noframes
+// @grant GM_getResourceText
+// @grant GM_log
+// @grant GM_openInTab
+// @grant GM_registerMenuCommand
+// @grant GM_xmlhttpRequest
+// @grant GM_deleteValue
+// @grant GM_getValue
+// @grant GM_setValue
 // ==/UserScript==
 
-(function () {
 
+(function () {
+    if (window.top != window.self) {
+        return;
+    }
     // XPath関数
     var XPath = {
         cache: null,
@@ -70,9 +81,9 @@
         var section = iframeDoc.createElement("div");
         section.className = "section_header_holder";
         section.setAttribute("style", "font-size: 95%;" +
-            "line-height: 120%;" +
-            "margin-left: 20%;" +
-            "margin-right: 20%;");
+        "line-height: 120%;" +
+        "margin-left: 20%;" +
+        "margin-right: 20%;");
 
 
         if (TWOauth.isAuthorize()) {// OAuth認証済みな時
@@ -321,7 +332,7 @@
         'goo.gl': {
             method: "POST",
             action: "https://www.googleapis.com/urlshortener/v1/url"
-                + ((GM_settings.googlAPIKey !== "") ? "?key=" + GM_settings.googlAPIKey : ""),
+            + ((GM_settings.googlAPIKey !== "") ? "?key=" + GM_settings.googlAPIKey : ""),
             headers: {
                 "Content-Type": "application/json"
             },
@@ -334,12 +345,12 @@
         'bit.ly': {
             method: "GET",
             action: "http://api.bit.ly/v3/shorten?&format=txt&login="
-                + GM_settings.bitlyUserName + "&apiKey=" + GM_settings.bitlyAPIKey + "&longUrl="
+            + GM_settings.bitlyUserName + "&apiKey=" + GM_settings.bitlyAPIKey + "&longUrl="
         },
         'j.mp': {
             method: "GET",
             action: "http://api.j.mp/v3/shorten?&format=txt&login="
-                + GM_settings.bitlyUserName + "&apiKey=" + GM_settings.bitlyAPIKey + "&longUrl="
+            + GM_settings.bitlyUserName + "&apiKey=" + GM_settings.bitlyAPIKey + "&longUrl="
         },
         'is.gd': {
             method: "GET",
@@ -350,6 +361,13 @@
             action: "http://tinyurl.com/api-create.php?url="
         }
     };
+
+    function hasInputField() {
+        var btnDiv = XPath.first(document, 'id("GM_Now_browsing")');
+        var inputFrame = XPath.first(document, '//iframe[@name="' + inputFramename + '"]');
+        return btnDiv && inputFrame
+    }
+
     // make ShortURL: url
     function MakeShortURL() {
         this.initialize.apply(this, arguments);
@@ -382,50 +400,49 @@
             return result;
         },
         getShortURL: function (callbackFunc) {
-            var btnDiv = XPath.first(document, 'id("GM_Now_browsing")');
-            var inpuFrame = XPath.first(document, '//iframe[@name="' + inputFramename + '"]');
-            if (!btnDiv && !inpuFrame) {
-                var mes = message[siteAPI];
-                var XHRobj = {};
-                XHRobj.method = mes.method;
-                XHRobj.url = mes.action + ((mes.noparam) ? "" : encodeURIComponent(this.url));
-                mes.headers && (XHRobj.headers = mes.headers);
-                mes.body && (XHRobj.data = this.formatParams(mes.body));
-                XHRobj.onload = function (res) {
-                    if (res.readyState == 4 && (res.status == 200 || res.status == 201)) {
-                        clearInterval(timerId);
-                        XHRloading.removeDiv();
-                        var shortedURL = res.responseText;
-                        // 上手く取得できてない場合はkill
-                        if (typeof shortedURL === "undefined" || shortedURL === "undefined") {
-                            return;
-                        }
-                        if (mes.response) {
-                            var resJSON = JSON.parse(shortedURL);
-                            shortedURL = getObjValueFromString(resJSON, mes.response);
-                        }
-                        callbackFunc(shortedURL);
-                    }
-                };
-                XHRobj.onerror = function (e) {
-                    GM_log(e);
-                };
-                // ローディング表示
-                XHRloading.create();
-                var GM_xhr = GM_xmlhttpRequest(XHRobj);
-                // タイムアウト
-                var self = this;
-                var timerId = setTimeout((function (arg) {
-                    return function () {
-                        GM_xhr.abort();
-                        var isChanged = self.changeShortAPI();// 短縮URLを変える。
-                        XHRloading.removeDiv();
-                        if (isChanged) {
-                            arg.callee.apply(self, arg);
-                        }
-                    }
-                })(arguments), 7000);
+            if (hasInputField()) {
+                return;
             }
+            var mes = message[siteAPI];
+            var XHRobj = {};
+            XHRobj.method = mes.method;
+            XHRobj.url = mes.action + ((mes.noparam) ? "" : encodeURIComponent(this.url));
+            mes.headers && (XHRobj.headers = mes.headers);
+            mes.body && (XHRobj.data = this.formatParams(mes.body));
+            XHRobj.onload = function (res) {
+                if (res.readyState == 4 && (res.status == 200 || res.status == 201)) {
+                    clearInterval(timerId);
+                    XHRloading.removeDiv();
+                    var shortedURL = res.responseText;
+                    // 上手く取得できてない場合はkill
+                    if (typeof shortedURL === "undefined" || shortedURL === "undefined") {
+                        return;
+                    }
+                    if (mes.response) {
+                        var resJSON = JSON.parse(shortedURL);
+                        shortedURL = getObjValueFromString(resJSON, mes.response);
+                    }
+                    callbackFunc(shortedURL);
+                }
+            };
+            XHRobj.onerror = function (e) {
+                GM_log(e);
+            };
+            // ローディング表示
+            XHRloading.create();
+            var GM_xhr = GM_xmlhttpRequest(XHRobj);
+            // タイムアウト
+            var self = this;
+            var timerId = setTimeout((function (arg) {
+                return function () {
+                    GM_xhr.abort();
+                    var isChanged = self.changeShortAPI();// 短縮URLを変える。
+                    XHRloading.removeDiv();
+                    if (isChanged) {
+                        arg.callee.apply(self, arg);
+                    }
+                }
+            })(arguments), 7000);
         },
         // siteAPIを切り替えていく
         changeShortAPI: function () {
@@ -437,7 +454,7 @@
                 }
             }
         }
-    }
+    };
 
     /*  ポストメッセージの構造
      Message
@@ -507,9 +524,9 @@
                 iframe.style.position = "fixed";
                 iframe.style.display = "block";
                 var inputUI = self.createHTML(defObj);
-                self.addCSS(doc);
                 // 入力領域を表示
                 doc.body.appendChild(inputUI);
+                self.addCSS(doc);
                 self.addInputEvent();
             }, inputFramename);
 
@@ -556,7 +573,7 @@
                     document.body.removeChild(self.iframe);
                     focusBody();
                 } else if (evt.keyCode == 9) {// TabキーでactivityFiledを有効化して移動
-                    evt.preventDefault()
+                    evt.preventDefault();
                     activityFiled.setAttribute("contenteditable", "true");
                     activityFiled.focus();
                 }
@@ -637,10 +654,11 @@
         },
         post: function () {
             var content = {status: this.post_message, source: clientInfo.name};
-            TWOauth.postURL('https://api.twitter.com/1.1/statuses/update.json', content, function (error, evt) {
+            console.log(content);
+            TWOauth.postURL('https://api.twitter.com/1.1/statuses/update.json', content, function (error, response) {
+                console.log(response);
                 if (error) {
                     console.log("PNBT post Error : ", error);
-
                 }
             });
         }
@@ -668,12 +686,22 @@
         if (!context) {
             context = document;
         }
-        var sheet = context.createElement('style');
-        sheet.type = 'text/css';
-        var _root = context.getElementsByTagName('head')[0] || context.documentElement;
-        sheet.textContent = css;
-        return _root.appendChild(sheet).sheet;
+        function _addCss(doc){
+            var sheet = doc.createElement('style');
+            sheet.type = 'text/css';
+            var _root = doc.getElementsByTagName('head')[0] || doc.documentElement;
+            sheet.textContent = css;
+            _root.appendChild(sheet);
+        }
+        var readyState = document.readyState;
+        if (readyState == "interactive" || readyState === 'complete') {
+            _addCss(context);
+        } else {
+            document.defaultView.addEventListener("DOMContentLoaded", function(){
+                _addCss(context);
 
+            });
+        }
     }
 
     // フレームパネルの作成
@@ -708,9 +736,9 @@
         iframe.addEventListener("load", done, true);
         var frames = makeFrame.data || {};
         var load = frames[framename] || {
-            start: new Date,
-            sleepFor: 400
-        };
+                start: new Date,
+                sleepFor: 400
+            };
         load.timeout = setTimeout(testInvasion, load.sleepFor);
         load.sleepFor *= 1.5;
         frames[framename] = load;
@@ -773,8 +801,7 @@
     // E4X to DOM
     function e4xToDOM(html) {
         var range = document.createRange();
-        var htmlDOM = range.createContextualFragment(html);
-        return htmlDOM;
+        return range.createContextualFragment(html);
     }
 
     // http://liosk.blog103.fc2.com/blog-entry-162.html
@@ -798,7 +825,7 @@
     });
     GM_registerMenuCommand("Post to Twitter", function () {
         launchPNBT();
-    })
+    });
     function launchPNBT() {
         if (!TWOauth.isAuthorize()) {
             alert("You must Sign-in with Twitter");
@@ -823,10 +850,12 @@
             title = removeMeta(title);
         }
         // 短縮URLサービスは使わない
-        if(siteAPI === 't.co'){
-            var twitterNew = new PostTwitter(normalURL, title);
-            twitterNew.make_message();
-        }else{
+        if (siteAPI === 't.co') {
+            if (!hasInputField()) {
+                var twitterNew = new PostTwitter(normalURL, title);
+                twitterNew.make_message();
+            }
+        } else {
             var receivedShortUrl = new MakeShortURL(normalURL);
             receivedShortUrl.getShortURL(function (shortedURL) {
                 var twitterNew = new PostTwitter(shortedURL, title);
@@ -866,22 +895,22 @@
         var urlStack = [];
         var result = "";
         // http:// なURLを保護
-        result = str.replace(URLReg,function (m, url) {
+        result = str.replace(URLReg, function (m, url) {
             if (url) {
                 m = m.replace(url, MAGIC_NUMBER);
                 urlStack.push(url);
             }
             return m;
             // ドメイン文字列を自動リンクされないように回避
-        }).replace(domainReg,function (m, domain) {
-                if (domain) {
-                    m = m.replace(".", "-", "g");
-                }
-                return m;
-                // 保護したURLを戻す
-            }).replace(MAGIC_NUMBER, function (m) {
-                return urlStack.shift();
-            }, "g");
+        }).replace(domainReg, function (m, domain) {
+            if (domain) {
+                m = m.replace(".", "-", "g");
+            }
+            return m;
+            // 保護したURLを戻す
+        }).replace(MAGIC_NUMBER, function (m) {
+            return urlStack.shift();
+        }, "g");
         return result;
     }
 })();
