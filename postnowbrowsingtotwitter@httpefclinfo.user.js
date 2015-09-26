@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name Post Now browsing to Twitter
 // @namespace http://efcl.info/
-// @version 1.2.4
+// @version 1.2.5
 // @description Usage: Ctrl + Shift + Enter -> "Now browsing: ****" on Twitter.
 // @include http://*
 // @include https://*
@@ -81,9 +81,9 @@
         var section = iframeDoc.createElement("div");
         section.className = "section_header_holder";
         section.setAttribute("style", "font-size: 95%;" +
-        "line-height: 120%;" +
-        "margin-left: 20%;" +
-        "margin-right: 20%;");
+            "line-height: 120%;" +
+            "margin-left: 20%;" +
+            "margin-right: 20%;");
 
 
         if (TWOauth.isAuthorize()) {// OAuth認証済みな時
@@ -105,7 +105,6 @@
             configDiv1.appendChild(resetBt);
             section.appendChild(configDiv1);
         } else {
-
             var configDiv1 = iframeDoc.createElement("div");
             configDiv1.className = "config_var";
             XHRloading.removeText(iframeDoc);// delete loading...
@@ -131,7 +130,7 @@
             var configDiv2 = iframeDoc.createElement("div");
             configDiv2.className = "config_var";
             var textPin = iframeDoc.createElement("span");
-            textPin.className = "field_label"
+            textPin.className = "field_label";
             textPin.innerHTML = "Input PIN code ";
             var inputPin = iframeDoc.createElement("input");
             var submitBt = iframeDoc.createElement("Button");
@@ -142,7 +141,7 @@
                     XHRloading.removeText(iframeDoc);
                     alert("Authorization copplete!\nHave fun!");
                 });
-            }, false)
+            }, false);
             configDiv2.appendChild(textPin);
             configDiv2.appendChild(inputPin);
             configDiv2.appendChild(submitBt);
@@ -239,51 +238,51 @@
     // ショートカットの定義
     var shortcut = new ShortcutKey();
     Config.define('usc_basic', function () {
-            with (this.builder) {
-                var shortURL_opt = [
-                    't.co',
-                    'bit.ly',
-                    'j.mp',
-                    'goo.gl',
-                    'is.gd',
-                    'tinyurl.com'
-                ];
-                dialog(
-                    "Post Now browsing to Twitter Settings",
-                    { width: 600, height: 700 },
+        with (this.builder) {
+            var shortURL_opt = [
+                't.co',
+                'bit.ly',
+                'j.mp',
+                'goo.gl',
+                'is.gd',
+                'tinyurl.com'
+            ];
+            dialog(
+                "Post Now browsing to Twitter Settings",
+                {width: 600, height: 700},
 
-                    section(
-                        "User options",
-                        "Behavior/keyboard Preference",
-                        grid(
-                            text("Prefix:", 'defaultTag', "Now browsing: ", { size: 20 }), '\n',
-                            checkbox("Use selection quote", 'isSelection', true), '\n',
-                            checkbox("remove utm_* parameter", 'removeUtm', false), '\n',
-                            checkbox("avoid link to @ and #", 'avoidLinktoMeta', false), '\n',
-                            checkbox("avoid link to string like 'example.com'", 'avoidLinkDomainString', false), '\n',
-                            checkbox("Post with Ctrl+Enter", 'PostWithCtrl', false), '\n',
-                            text("ShortcutKey:", 'ShortCutKey', "CS-Enter", { size: 16 })
-                        )
-                    ),
-                    section(
-                        "Short URL options",
-                        "select used Short URL service",
-
-                        grid(
-                            select("Short URL Services", 'ShortURL', shortURL_opt, "bit.ly"), '\n',
-                            text("bit.ly Username:", 'bitlyUserName', "remiko"), '\n',
-                            text("bit.ly APIKey :", 'bitlyAPIKey', 'R_fa2240c646c07b2091c6bc6d109089ef', { size: 30 }),
-                            '\n',
-                            text("goo.gl APIKey :", 'googlAPIKey', '', { size: 30 })
-                        )
-                    ),
-                    section(
-                        "OAuth Authorization",
-                        "Sign in with Twitter"
+                section(
+                    "User options",
+                    "Behavior/keyboard Preference",
+                    grid(
+                        text("Prefix:", 'defaultTag', "Now browsing: ", {size: 20}), '\n',
+                        checkbox("Use selection quote", 'isSelection', true), '\n',
+                        checkbox("remove utm_* parameter", 'removeUtm', false), '\n',
+                        checkbox("avoid link to @ and #", 'avoidLinktoMeta', false), '\n',
+                        checkbox("avoid link to string like 'example.com'", 'avoidLinkDomainString', false), '\n',
+                        checkbox("Post with Ctrl+Enter", 'PostWithCtrl', false), '\n',
+                        text("ShortcutKey:", 'ShortCutKey', "CS-Enter", {size: 16})
                     )
-                );
-            }
-        },
+                ),
+                section(
+                    "Short URL options",
+                    "select used Short URL service",
+
+                    grid(
+                        select("Short URL Services", 'ShortURL', shortURL_opt, "bit.ly"), '\n',
+                        text("bit.ly Username:", 'bitlyUserName', "remiko"), '\n',
+                        text("bit.ly APIKey :", 'bitlyAPIKey', 'R_fa2240c646c07b2091c6bc6d109089ef', {size: 30}),
+                        '\n',
+                        text("goo.gl APIKey :", 'googlAPIKey', '', {size: 30})
+                    )
+                ),
+                section(
+                    "OAuth Authorization",
+                    "Sign in with Twitter"
+                )
+            );
+        }
+    },
         // options
         {
             saveKey: 'GM_config',
@@ -317,7 +316,7 @@
     var defaultTag = GM_settings.defaultTag;// prefix - 何も書かなかった時の接頭辞
     var UseSelection = GM_settings.isSelection;
     var siteAPI = GM_settings.ShortURL;
-    const inputFramename = "GM_INPUT_FRAME";
+    const inputFrameName = "GM_INPUT_FRAME";
     var message = {
         /*
          必須
@@ -364,7 +363,7 @@
 
     function hasInputField() {
         var btnDiv = XPath.first(document, 'id("GM_Now_browsing")');
-        var inputFrame = XPath.first(document, '//iframe[@name="' + inputFramename + '"]');
+        var inputFrame = XPath.first(document, '//iframe[@name="' + inputFrameName + '"]');
         return btnDiv && inputFrame
     }
 
@@ -510,7 +509,7 @@
                     t = [' "', this.title, '" '].join('');
                 }
             }
-            this.activity = escapeHTML(t);
+            this.activity = escapeHTML(removeBreakLine(t));
             // 渡すオブジェクト
             var defObj = {
                 activity: this.activity,
@@ -523,12 +522,20 @@
                 iframe.style.width = "100%";
                 iframe.style.position = "fixed";
                 iframe.style.display = "block";
+                iframe.style.overflow = "auto";
+                iframe.style.zIndex = 2147483647;
+                iframe.style.border = 0;
+                iframe.style.margin = 0;
+                iframe.style.padding = 0;
+                iframe.style.top = "82%";
+                iframe.style.left = 0;
+                iframe.style.bottom = 0;
                 var inputUI = self.createHTML(defObj);
                 // 入力領域を表示
                 doc.body.appendChild(inputUI);
                 self.addCSS(doc);
                 self.addInputEvent();
-            }, inputFramename);
+            }, inputFrameName);
 
         },
         // 入力領域のイベントを追加
@@ -686,18 +693,19 @@
         if (!context) {
             context = document;
         }
-        function _addCss(doc){
+        function _addCss(doc) {
             var sheet = doc.createElement('style');
             sheet.type = 'text/css';
             var _root = doc.getElementsByTagName('head')[0] || doc.documentElement;
             sheet.textContent = css;
             _root.appendChild(sheet);
         }
+
         var readyState = document.readyState;
         if (readyState == "interactive" || readyState === 'complete') {
             _addCss(context);
         } else {
-            document.defaultView.addEventListener("DOMContentLoaded", function(){
+            document.defaultView.addEventListener("DOMContentLoaded", function () {
                 _addCss(context);
 
             });
@@ -874,6 +882,10 @@
             str = str.replace(reg[i], "$1‌$2");// $1 ゼロ幅文字 $2
         }
         return str;
+    }
+
+    function removeBreakLine(str) {
+        return str.replace(/\n/g, "");
     }
 
     function escapeHTML(str) {
