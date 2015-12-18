@@ -238,51 +238,51 @@
     // ショートカットの定義
     var shortcut = new ShortcutKey();
     Config.define('usc_basic', function () {
-        with (this.builder) {
-            var shortURL_opt = [
-                't.co',
-                'bit.ly',
-                'j.mp',
-                'goo.gl',
-                'is.gd',
-                'tinyurl.com'
-            ];
-            dialog(
-                "Post Now browsing to Twitter Settings",
-                {width: 600, height: 700},
+            with (this.builder) {
+                var shortURL_opt = [
+                    't.co',
+                    'bit.ly',
+                    'j.mp',
+                    'goo.gl',
+                    'is.gd',
+                    'tinyurl.com'
+                ];
+                dialog(
+                    "Post Now browsing to Twitter Settings",
+                    {width: 600, height: 700},
 
-                section(
-                    "User options",
-                    "Behavior/keyboard Preference",
-                    grid(
-                        text("Prefix:", 'defaultTag', "Now browsing: ", {size: 20}), '\n',
-                        checkbox("Use selection quote", 'isSelection', true), '\n',
-                        checkbox("remove utm_* parameter", 'removeUtm', false), '\n',
-                        checkbox("avoid link to @ and #", 'avoidLinktoMeta', false), '\n',
-                        checkbox("avoid link to string like 'example.com'", 'avoidLinkDomainString', false), '\n',
-                        checkbox("Post with Ctrl+Enter", 'PostWithCtrl', false), '\n',
-                        text("ShortcutKey:", 'ShortCutKey', "CS-Enter", {size: 16})
-                    )
-                ),
-                section(
-                    "Short URL options",
-                    "select used Short URL service",
+                    section(
+                        "User options",
+                        "Behavior/keyboard Preference",
+                        grid(
+                            text("Prefix:", 'defaultTag', "Now browsing: ", {size: 20}), '\n',
+                            checkbox("Use selection quote", 'isSelection', true), '\n',
+                            checkbox("remove utm_* parameter", 'removeUtm', false), '\n',
+                            checkbox("avoid link to @ and #", 'avoidLinktoMeta', false), '\n',
+                            checkbox("avoid link to string like 'example.com'", 'avoidLinkDomainString', false), '\n',
+                            checkbox("Post with Ctrl+Enter", 'PostWithCtrl', false), '\n',
+                            text("ShortcutKey:", 'ShortCutKey', "CS-Enter", {size: 16})
+                        )
+                    ),
+                    section(
+                        "Short URL options",
+                        "select used Short URL service",
 
-                    grid(
-                        select("Short URL Services", 'ShortURL', shortURL_opt, "bit.ly"), '\n',
-                        text("bit.ly Username:", 'bitlyUserName', "remiko"), '\n',
-                        text("bit.ly APIKey :", 'bitlyAPIKey', 'R_fa2240c646c07b2091c6bc6d109089ef', {size: 30}),
-                        '\n',
-                        text("goo.gl APIKey :", 'googlAPIKey', '', {size: 30})
+                        grid(
+                            select("Short URL Services", 'ShortURL', shortURL_opt, "bit.ly"), '\n',
+                            text("bit.ly Username:", 'bitlyUserName', "remiko"), '\n',
+                            text("bit.ly APIKey :", 'bitlyAPIKey', 'R_fa2240c646c07b2091c6bc6d109089ef', {size: 30}),
+                            '\n',
+                            text("goo.gl APIKey :", 'googlAPIKey', '', {size: 30})
+                        )
+                    ),
+                    section(
+                        "OAuth Authorization",
+                        "Sign in with Twitter"
                     )
-                ),
-                section(
-                    "OAuth Authorization",
-                    "Sign in with Twitter"
-                )
-            );
-        }
-    },
+                );
+            }
+        },
         // options
         {
             saveKey: 'GM_config',
@@ -859,10 +859,13 @@
         }
         // 短縮URLサービスは使わない
         if (siteAPI === 't.co') {
-            if (!hasInputField()) {
+            requestAnimationFrame(function () {
+                if (hasInputField()) {
+                    return;
+                }
                 var twitterNew = new PostTwitter(normalURL, title);
                 twitterNew.make_message();
-            }
+            });
         } else {
             var receivedShortUrl = new MakeShortURL(normalURL);
             receivedShortUrl.getShortURL(function (shortedURL) {
