@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name Post Now browsing to Twitter
 // @namespace http://efcl.info/
-// @version 1.2.5
+// @version 1.2.6
 // @description Usage: Ctrl + Shift + Enter -> "Now browsing: ****" on Twitter.
 // @include http://*
 // @include https://*
@@ -66,6 +66,21 @@
         }
     };
     XPath.reset();
+
+
+    var LockManager = {
+        writing: false,
+        lock: function () {
+            LockManager.writing = true;
+        },
+        isLock: function () {
+            return LockManager.writing;
+        },
+        unlock: function () {
+            LockManager.writing = false;
+        }
+    };
+    var IS_WRITING = false;
 
     // OAuth
     var clientInfo = {
@@ -426,6 +441,7 @@
             };
             XHRobj.onerror = function (e) {
                 GM_log(e);
+                LockManager.unlock();
             };
             // ローディング表示
             XHRloading.create();
@@ -554,6 +570,7 @@
                 if (esc) {
                     this.removeEventListener("keypress", arguments.callee, false);
                     document.body.removeChild(self.iframe);
+                    LockManager.unlock();
                 }
             }, false);
             // フォーカスをinputFiledへ移す
@@ -575,10 +592,12 @@
                     document.body.removeChild(self.iframe);
                     focusBody();
                     self.arrangeMes();
+                    LockManager.unlock();
                 } else if (esc) { // Escでキャンセル
                     this.removeEventListener("keypress", arguments.callee, false);
                     document.body.removeChild(self.iframe);
                     focusBody();
+                    LockManager.unlock();
                 } else if (evt.keyCode == 9) {// TabキーでactivityFiledを有効化して移動
                     evt.preventDefault();
                     activityFiled.setAttribute("contenteditable", "true");
@@ -857,15 +876,18 @@
         if (GM_settings.avoidLinktoMeta) {
             title = removeMeta(title);
         }
+        // ロックする
+        if (LockManager.isLock()) {
+            return;
+        }
+        if (hasInputField()) {
+            return;
+        }
+        LockManager.lock();
         // 短縮URLサービスは使わない
         if (siteAPI === 't.co') {
-            requestAnimationFrame(function () {
-                if (hasInputField()) {
-                    return;
-                }
-                var twitterNew = new PostTwitter(normalURL, title);
-                twitterNew.make_message();
-            });
+            var twitterNew = new PostTwitter(normalURL, title);
+            twitterNew.make_message();
         } else {
             var receivedShortUrl = new MakeShortURL(normalURL);
             receivedShortUrl.getShortURL(function (shortedURL) {
