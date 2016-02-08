@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name Post Now browsing to Twitter
 // @namespace http://efcl.info/
-// @version 1.2.6
+// @version 1.2.7
 // @description Usage: Ctrl + Shift + Enter -> "Now browsing: ****" on Twitter.
 // @include http://*
 // @include https://*
@@ -80,7 +80,6 @@
             LockManager.writing = false;
         }
     };
-    var IS_WRITING = false;
 
     // OAuth
     var clientInfo = {
@@ -876,14 +875,17 @@
         if (GM_settings.avoidLinktoMeta) {
             title = removeMeta(title);
         }
-        // ロックする
-        if (LockManager.isLock()) {
-            return;
-        }
         if (hasInputField()) {
             return;
         }
+        // ロックされてる
+        if (LockManager.isLock()) {
+            return;
+        }
+        console.log(LockManager.isLock())
         LockManager.lock();
+        console.log(LockManager.isLock())
+
         // 短縮URLサービスは使わない
         if (siteAPI === 't.co') {
             var twitterNew = new PostTwitter(normalURL, title);
