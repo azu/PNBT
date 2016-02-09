@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name Post Now browsing to Twitter
 // @namespace http://efcl.info/
-// @version 1.2.7
+// @version 1.2.8
 // @description Usage: Ctrl + Shift + Enter -> "Now browsing: ****" on Twitter.
 // @include http://*
 // @include https://*
@@ -591,7 +591,6 @@
                     document.body.removeChild(self.iframe);
                     focusBody();
                     self.arrangeMes();
-                    LockManager.unlock();
                 } else if (esc) { // Escでキャンセル
                     this.removeEventListener("keypress", arguments.callee, false);
                     document.body.removeChild(self.iframe);
@@ -882,9 +881,7 @@
         if (LockManager.isLock()) {
             return;
         }
-        console.log(LockManager.isLock())
         LockManager.lock();
-        console.log(LockManager.isLock())
 
         // 短縮URLサービスは使わない
         if (siteAPI === 't.co') {
