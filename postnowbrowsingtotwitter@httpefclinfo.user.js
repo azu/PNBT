@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name Post Now browsing to Twitter
 // @namespace http://efcl.info/
-// @version 1.2.8
+// @version 1.2.9
 // @description Usage: Ctrl + Shift + Enter -> "Now browsing: ****" on Twitter.
 // @include http://*
 // @include https://*
@@ -551,7 +551,11 @@
                 self.addCSS(doc);
                 self.addInputEvent();
             }, inputFrameName);
-
+        },
+        removeFrame: function(){
+            document.body.removeChild(this.iframe);
+            LockManager.unlock();
+            this.iframe = null;
         },
         // 入力領域のイベントを追加
         addInputEvent: function () {
@@ -568,8 +572,7 @@
                 var esc = (e.keyCode == 27);
                 if (esc) {
                     this.removeEventListener("keypress", arguments.callee, false);
-                    document.body.removeChild(self.iframe);
-                    LockManager.unlock();
+                    self.removeFrame();
                 }
             }, false);
             // フォーカスをinputFiledへ移す
@@ -588,14 +591,13 @@
                     this.removeEventListener("keypress", arguments.callee, false);
                     self.comment = inputFiled.value;
                     self.activity = activityFiled.textContent;
-                    document.body.removeChild(self.iframe);
                     focusBody();
                     self.arrangeMes();
+                    self.removeFrame();
                 } else if (esc) { // Escでキャンセル
                     this.removeEventListener("keypress", arguments.callee, false);
-                    document.body.removeChild(self.iframe);
                     focusBody();
-                    LockManager.unlock();
+                    self.removeFrame();
                 } else if (evt.keyCode == 9) {// TabキーでactivityFiledを有効化して移動
                     evt.preventDefault();
                     activityFiled.setAttribute("contenteditable", "true");
