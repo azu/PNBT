@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name Post Now browsing to Twitter
 // @namespace http://efcl.info/
-// @version 1.3.0
+// @version 1.2.9
 // @description Usage: Ctrl + Shift + Enter -> "Now browsing: ****" on Twitter.
 // @include http://*
 // @include https://*
@@ -868,7 +868,7 @@
             normalURL = item.link;
             title = item.title + " - " + feed.channel.title;
         }
-        if(/^https?:\/\/irodr\.netlify\.com/){
+        if(/^https?:\/\/irodr\.netlify\.com/.test(normalURL)){
             var w = unsafeWindow;
             var item = w.userScript.getActiveContent();
             var feed = w.userScript.getActiveSubscription();
