@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name Post Now browsing to Twitter
 // @namespace http://efcl.info/
-// @version 1.2.9
+// @version 1.3.0
 // @description Usage: Ctrl + Shift + Enter -> "Now browsing: ****" on Twitter.
 // @include http://*
 // @include https://*
@@ -867,6 +867,13 @@
             var feed = w.get_active_feed();
             normalURL = item.link;
             title = item.title + " - " + feed.channel.title;
+        }
+        if(/^https?:\/\/irodr\.netlify\.com/){
+            var w = unsafeWindow;
+            var item = w.userScript.getActiveContent();
+            var feed = w.userScript.getActiveSubscription();
+            normalURL = item.url;
+            title = item.title + " - " +  feed.title;
         }
         // utm_*を取り除く
         if (GM_settings.removeUtm) {
