@@ -733,6 +733,9 @@
 
     // フレームパネルの作成
     function makeFrame(callback, name) {
+        if(hasMadeFrame()){
+            return;
+        }
         function testInvasion() {
             iframe.removeEventListener("load", done, true);
             var message = ((new Date) - load.start) + "ms passed, ";
@@ -758,6 +761,7 @@
 
         var framename = iframe.name =
             typeof name !== "undefined" ? name : ("pane" + (makeFrame.id = (makeFrame.id || 0) - 1));
+        iframe.id = "GM_PNBT_FRAME";
         iframe.setAttribute("style", "overflow:auto;z-index:2147483647; border:0; margin:0; padding:0;top:82%; bottom:0; left:0;");
         iframe.src = "about:blank";
         iframe.addEventListener("load", done, true);
@@ -771,6 +775,9 @@
         frames[framename] = load;
         makeFrame.data = frames;
         document.body.appendChild(iframe);
+    }
+    function hasMadeFrame(){
+        reutrn document.getElementById("GM_PNBT_FRAME") !== undefined;
     }
 
     // ローディング■の操作
