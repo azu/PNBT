@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name Post Now browsing to Twitter
 // @namespace http://efcl.info/
-// @version 1.2.9
+// @version 1.3.1
 // @description Usage: Ctrl + Shift + Enter -> "Now browsing: ****" on Twitter.
 // @include http://*
 // @include https://*
@@ -777,7 +777,7 @@
         document.body.appendChild(iframe);
     }
     function hasMadeFrame(){
-        reutrn document.getElementById("GM_PNBT_FRAME") !== undefined;
+        return document.getElementById("GM_PNBT_FRAME") !== null;
     }
 
     // ローディング■の操作
